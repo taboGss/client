@@ -7,4 +7,5 @@ class endpoint:
     
     GET_DEVICES = 'http://192.168.0.135:8000/api/v1/devices'
     GET_DEVICES_ZONES = 'http://192.168.0.135:8000/api/v1/device-zones/'
+    GET_PARAMS_SPEED = 'http://192.168.0.135:8000/api/v1/device-zones/14'
     PUT = ''

@@ -9,6 +9,9 @@
 		Establece el estado del script a CONNECTING
 	connected_rtsp()
 		Restablece el estado del script a RUNNING
+	
+	NOTA : ESTA VERSION DEL MODULO CLIENT SOLO ES PARA EL SCRIPT DE
+		   VELOCIDAD
 """
 import os
 
@@ -24,6 +27,7 @@ from utils_launcher.credentials import USERNAME, PASSWORD, endpoint
 # al cliente.El PID es la forma en la que Launcher distingue todos los 
 # scripts que se estan corriendo   
 pid = os.getpid()
+
 headers = {}
 session = requests.Session() 
 
@@ -70,6 +74,37 @@ def get_endpoint_template(script_type):
 		template[key] = None
 	
 	return template
+
+
+def format_coordinates(coordinates):
+	"""Dar formato a las coordenadas que provienen del Endpoint"""
+	coor = "["
+	for point in coordinates:
+		coor += "(" + str(point['x']) + "," + str(point['y']) + "),"	
+	
+	return coor[:-1] + "]"
+
+
+def get_parameters(script_type):
+	"""Obtener los parametros para ejecutar el script"""
+	if script_type == SPEED:
+		data = {'event_type': 6}
+		req = session.get(endpoint.GET_PARAMS_SPEED,
+						  json=data,
+						  headers=headers).json()
+		resp = req['response']
+		
+		# Filtramos los parametros que requiere el script de velocidad
+		rtsp = resp['rtsp_url']
+		zone_id = resp['zones'][0]['id']
+		coordinates = format_coordinates(resp['zones'][0]['coordinates'])
+		distance = float(resp['zones'][0]['conf1'])
+		orientation = resp['zones'][0]['road_direction']['name']
+		
+		return rtsp, distance, coordinates, orientation, zone_id
+		 
+	else:
+		pass # Aqui debe ir lo de Angel. Aun no esta listo
 
 
 def post_update(data, script_type):
