@@ -63,7 +63,7 @@ def get_endpoint_template(script_type):
 		template para rellenar y enviar al EndPoint
 	"""
 	if script_type == SPEED:
-		file = open('cfg/speed_cfg.json') 
+		file = open('cfg/persons_template.json')
 		cfg_json = json.load(file)
 		file.close()
 	else:
